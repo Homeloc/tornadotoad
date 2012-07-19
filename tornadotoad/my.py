@@ -5,3 +5,5 @@ log_404 = False
 log_403 = False
 log_405 = False
 use_ssl = False
+project_root = None
+app_version = None

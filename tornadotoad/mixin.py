@@ -25,7 +25,7 @@ class RequestHandler(object):
             return super(RequestHandler, self).send_error(status_code, **kwargs)
     
         tornado_toad = api.TornadoToad()
-        exception = kwargs['exception'] if 'exception' in kwargs else None
+        exception = kwargs['exc_info'] if 'exc_info' in kwargs else None
         if exception:
             tornado_toad.post_notice(exception, request=self._td_build_request_dict())
         return super(RequestHandler, self).send_error(status_code, **kwargs)

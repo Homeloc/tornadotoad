@@ -9,13 +9,13 @@ import tornado.ioloop
 from tornadotoad import my
 
 class TornadoToad(object):
-    api_version = "2.0"
+    api_version = "2.2"
     notifier_name = "TornadoToad"
     notifier_version = "0.3"
     notifier_url = "http://github.com/ephramzerb/tornadotoad"
         
     def post_notice(self, exception, request=None ):
-        """Log an exception to Hoptoad.
+        """Log an exception to Airbrake.
         
         Will send request asynchronously if there is an accessible IOloop
         (created by a started  Tornado App).  If no IOloop present, post
@@ -23,7 +23,8 @@ class TornadoToad(object):
         """
         if not my.registered:
             return False
-        url = self.ssl_prefix() + "hoptoadapp.com/notifier_api/v2/notices"
+
+        url = self.ssl_prefix() + "api.airbrake.io/notifier_api/v2/notices"
         body = self._build_notice_body(exception, request=request)
         self._send(url, body=body, headers={'Content-Type': 'text/xml'})
 
@@ -39,7 +40,7 @@ class TornadoToad(object):
         - scm_revision: What's the version control revision.
         - local_username: Who deployed?
         
-        More: http://help.hoptoadapp.com/kb/api-2/notifier-api-version-21
+        More: http://help.airbrake.io/kb/api-2/notifier-api-version-22
         """
         params = {}
         params['api_key'] = my.api_key
@@ -75,9 +76,11 @@ class TornadoToad(object):
         
         # error/message
         error_message = SubElement(error, "message")
-        error_message.text = '%s: %s' % (exception.__class__.__name__, 
-                                         str(exception))
-        
+        error_message.text = '%s: %s' % (
+            exception[0], 
+            exception[1]
+        )
+
         # error/backtrace
         backtrace = SubElement(error, "backtrace")
         _type, _value, tb = sys.exc_info()
@@ -91,13 +94,17 @@ class TornadoToad(object):
 
         # request (optional)
         request_el = self._build_request_el(request) if request else None
-        if request_el:
+        if request_el is not None:
             root.append(request_el)
 
         # server-environment
         server_environment = SubElement(root, "server-environment")
+        project_root= SubElement(server_environment, "project-root")
+        project_root.text = my.project_root
         environment = SubElement(server_environment, "environment-name")
         environment.text = my.environment
+        app_version = SubElement(server_environment, "app-version")
+        app_version.text = my.app_version
         
         return '<?xml version="1.0" encoding="UTF-8"?>\n' + tostring(root, 'utf-8')
     
