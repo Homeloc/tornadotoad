@@ -76,9 +76,10 @@ class TornadoToad(object):
         
         # error/message
         error_message = SubElement(error, "message")
-        error_message.text = '%s: %s' % (
-            exception[0], 
-            exception[1]
+
+        error_message.text = u'%s: %s' % (
+            exception[0],
+            str(exception[1]).decode('utf-8')
         )
 
         # error/backtrace
