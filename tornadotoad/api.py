@@ -139,7 +139,7 @@ class TornadoToad(object):
             params = SubElement(request_el, "params")
             for key in request['params'].keys():
                 key_el = SubElement(params, "var", {'key' : key})
-                key_el.text = str(request['params'][key])
+                key_el.text = str(request['params'][key]).decode('utf-8')
 
         return request_el
         
