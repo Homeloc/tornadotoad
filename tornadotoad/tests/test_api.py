@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 import unittest
-import sys
-sys.path.append("..")
 
 import tornadotoad
 from tornadotoad.api import TornadoToad
@@ -57,4 +55,3 @@ class TestMixin(unittest.TestCase):
             e = sys.exc_info()
             handler.send_error(status_code=500, exc_info=e)
             f
-
