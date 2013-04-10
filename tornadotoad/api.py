@@ -77,12 +77,13 @@ class TornadoToad(object):
         # error/message
         error_message = SubElement(error, "message")
 
-        if isinstance(exception.message, unicode):
-            unicode_msg = exception.message
-        else:
-            unicode_msg = exception.message.decode('utf8')
-        error_message.text = '%s: %s' % (exception.__class__.__name__,
-                                         unicode_msg)
+        try:
+            unicode_msg = unicode(exception)
+        except:
+            unicode_msg = u"Error getting exception message"
+
+        error_message.text = u'%s: %s' % (exception.__class__.__name__,
+                                          unicode_msg)
 
         # error/backtrace
         backtrace = SubElement(error, "backtrace")

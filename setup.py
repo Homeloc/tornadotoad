@@ -3,7 +3,7 @@ from setuptools import setup
 setup(
     name = 'tornadotoad',
     packages = ['tornadotoad'],
-    version = '0.3.4-homeloc',
+    version = '0.3.5-homeloc',
     author='Ivan Kanevski',
     author_email='kanevski@gmail.com',
     url='https://github.com/kanevski/tornadotoad',
